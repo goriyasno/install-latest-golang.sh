@@ -1,4 +1,4 @@
-### `install-go-universal.sh`
+### `install-latest-golang.sh`
 
 **A simple script to install the latest version of Go and set up environment variables on any Linux system.**
 
