@@ -117,21 +117,26 @@ set_go_env_vars() {
     export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
     export GO111MODULE=$GO_MOD_ENABLED
     
-    # Append these variables to ~/.bashrc for persistence
+    # Detect the shell and update the corresponding config file
+    if [ -n "$BASH_VERSION" ]; then
+        PROFILE_FILE="$HOME/.bashrc"
+    elif [ -n "$ZSH_VERSION" ]; then
+        PROFILE_FILE="$HOME/.zshrc"
+    elif [ -n "$BASH_VERSION" ] && [ ! -z "$PROFILE_FILE" ]; then
+        echo "No shell-specific file found, using .profile as fallback"
+        PROFILE_FILE="$HOME/.profile"
+    fi
+
+    echo "Adding Go environment variables to $PROFILE_FILE"
     echo "
     # Go Environment Variables
     export GOROOT=$GO_INSTALL_DIR/go
     export GOPATH=$GO_SRC_DIR
     export PATH=\$PATH:\$GOROOT/bin:\$GOPATH/bin
     export GO111MODULE=$GO_MOD_ENABLED
-    " >> ~/.bashrc
-    
-    # Verify the environment variables are set
-    echo "GOROOT set to: $GOROOT"
-    echo "GOPATH set to: $GOPATH"
-    echo "PATH updated: $PATH"
-    echo "GO111MODULE set to: $GO111MODULE"
+    " >> $PROFILE_FILE
 }
+
 
 # Main script logic
 
